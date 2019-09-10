@@ -1,0 +1,30 @@
+{
+  "name": "distance-speed",
+  "version": "1.0.0",
+  "description": "Tracks the miles driven and total time taken for trips from various drivers. \r Summarizes results with total miles and average speed for each driver.",
+  "private": true,
+  "bin": {
+    "distance-speed": "cli.js"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "eslint . && jest"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "author": "Nathan Friedly",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^6.3.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^6.2.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "jest": "^24.9.0",
+    "prettier": "1.18.2"
+  }
+}
