@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Tracks the miles driven and total time taken for trips from various drivers. \r Summarizes results with total miles and average speed for each driver.",
   "private": true,
+  "main": "lib/distance-speed.js",
   "bin": {
-    "distance-speed": "cli.js"
+    "distance-speed": "bin/cli.js"
   },
   "directories": {
     "lib": "lib"
