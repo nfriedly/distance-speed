@@ -6,7 +6,7 @@ More info at https://gist.github.com/dan-manges/1e1854d0704cb9132b74
 
 ## Prerequisites
 
-* Node.js
+* Node.js v10 or newer
 
 ## Usage
 
@@ -25,6 +25,7 @@ I decided on a function approach because I felt that it was well-suited to the c
 
 The testing goal was accomplished, in large part, by keeping the majority of the code in small functions in the library section.
 It's probably slightly more functions that I'd normally use, but I feel like it's a good match for what the challenge was requesting.
+The level of JSDoc is probably a bit overkill too, definitely a little more than I'd normally write.
 
 One thing I considered but decided against was supporting other units of distance. 
 Baking the `miles` and `mph` into the interface will make that a little more challenging to add, but certainly not impossible, and I prefer the simplicity of the current data model.
@@ -43,6 +44,8 @@ The benefits of the streaming interface only really matter with very large log f
 I feel a little dirty about using a regex in `parseLine()`, and I might switch to a proper parser if performance (or data consistency) became an issue. 
 But, it seems to work well for the moment, and I suspect it'd be more likely to be IO-limited than compute-limited in a real-world scenario.
 This was the first time I've used RegEx named capture groups, which definitely make the experience nicer.
+
+Treating the hours as a float also feels wrong, but work out fine since everything is rounded in the end.
 
 I initially overlooked the "discard trips outside of the 5-100mph range" requirement, and ended up adding that in later. 
 I'm not sure it's in the best possible spot in the flow, but I think it works well enough.

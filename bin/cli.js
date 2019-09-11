@@ -5,6 +5,11 @@ const fs = require("fs");
 
 const { tallyStream, analyze } = require("../lib/distance-speed");
 
+/**
+ * Parses the passed in log file and logs an analysis
+ * @param {string[]} argv
+ * @returns {Promise<void>}
+ */
 const analyzeLog = async argv => {
   const inputFile = argv[2];
 
