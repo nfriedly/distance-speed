@@ -2,6 +2,8 @@ const { PassThrough } = require("stream");
 const {
   parseLine,
   calculateHours,
+  isSpeedInRange,
+  handleCommand,
   tally,
   tallyStream,
   analyze
@@ -43,6 +45,53 @@ test("calculateHours with a more complex time range", () => {
       endMinute: 15
     })
   ).toBe(1.5);
+});
+
+test.each([
+  // miles, hours, expected
+  [4.9, 1, false],
+  [5, 1, true],
+  [100, 1, true],
+  [100.1, 1, false]
+])("isSpeedInRange %d mph", (miles, hours, expected) => {
+  expect(isSpeedInRange(miles, hours)).toBe(expected);
+});
+
+test("handleCommand should handle a Driver command", () => {
+  const drivers = {};
+  const line = { command: "Driver", driver: "Foo" };
+  handleCommand(drivers, line);
+  expect(drivers).toEqual({ Foo: { miles: 0, hours: 0 } });
+});
+
+test("handleCommand should handle a Trip command", () => {
+  const drivers = { Foo: { miles: 0, hours: 0 } };
+  const line = {
+    command: "Trip",
+    driver: "Foo",
+    startHour: 1,
+    startMinute: 0,
+    endHour: 2,
+    endMinute: 0,
+    miles: 50
+  };
+  const actual = handleCommand(drivers, line);
+  expect(actual).toEqual({ Foo: { miles: 50, hours: 1 } });
+});
+
+test("handleCommand should discard a Trip with an out-of-range speed", () => {
+  const drivers = { Foo: { miles: 0, hours: 0 } };
+  const line = {
+    command: "Trip",
+    driver: "Foo",
+    startHour: 1,
+    startMinute: 0,
+    endHour: 2,
+    endMinute: 0,
+    miles: 999
+  };
+  const actual = handleCommand(drivers, line);
+  expect(actual).toEqual({ Foo: { miles: 0, hours: 0 } });
 });
 
 test("tally a simple log file", () => {

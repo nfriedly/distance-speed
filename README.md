@@ -1,4 +1,4 @@
-# Driving history trackers
+# Driving history analyzer
 Tracks the miles driven and total time taken for trips from various drivers. 
 Summarizes results with total miles and average speed for each driver.
 
@@ -20,7 +20,8 @@ More info at https://gist.github.com/dan-manges/1e1854d0704cb9132b74
 
 ## Thoughts
 
-I came at this with the goal of supporting a streaming interface and being well-tested.
+I came at this with the goal of supporting a streaming interface and being well-tested. 
+I decided on a function approach because I felt that it was well-suited to the challenge and these goals, particularly testing.
 
 The testing goal was accomplished, in large part, by keeping the majority of the code in small functions in the library section.
 It's probably slightly more functions that I'd normally use, but I feel like it's a good match for what the challenge was requesting.
@@ -39,6 +40,9 @@ Depending on who this codebase was getting distributed to, (e.g. for anything in
 I'd probably also keep `tally()` if this were to be a public API, because it's going to be simpler and easier to use.
 The benefits of the streaming interface only really matter with very large log files where it would significantly reduce memory usage.
 
-I feel a little dirty about using a regex in `parseLine()`, and I might switch to a proper parser if performance became an issue. 
-But, it seems to work well for the moment.
-This was the first time I've used named capture groups, which definitely make the experience nicer.
+I feel a little dirty about using a regex in `parseLine()`, and I might switch to a proper parser if performance (or data consistency) became an issue. 
+But, it seems to work well for the moment, and I suspect it'd be more likely to be IO-limited than compute-limited in a real-world scenario.
+This was the first time I've used RegEx named capture groups, which definitely make the experience nicer.
+
+I initially overlooked the "discard trips outside of the 5-100mph range" requirement, and ended up adding that in later. 
+I'm not sure it's in the best possible spot in the flow, but I think it works well enough.

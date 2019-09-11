@@ -18,7 +18,7 @@
       "pre-commit": "pretty-quick --staged"
     }
   },
-  "author": "Nathan Friedly",
+  "author": "<snip>",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^6.3.0",
