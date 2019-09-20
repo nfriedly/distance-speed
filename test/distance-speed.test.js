@@ -62,12 +62,14 @@ test("handleCommand should handle a Driver command", () => {
   const line = { command: "Driver", driver: "Foo" };
   handleCommand(drivers, line);
   expect(drivers).toEqual({
-    Foo: { highwayMiles: 0, sideStreetMiles: 0, hours: 0 }
+    Foo: { highwayMiles: 0, sideStreetMiles: 0, hours: 0, invalidTrips: 0 }
   });
 });
 
 test("handleCommand should handle a Trip command", () => {
-  const drivers = { Foo: { highwayMiles: 0, sideStreetMiles: 0, hours: 0 } };
+  const drivers = {
+    Foo: { highwayMiles: 0, sideStreetMiles: 0, hours: 0, invalidTrips: 0 }
+  };
   const line = {
     command: "Trip",
     driver: "Foo",
@@ -79,12 +81,14 @@ test("handleCommand should handle a Trip command", () => {
   };
   const actual = handleCommand(drivers, line);
   expect(actual).toEqual({
-    Foo: { highwayMiles: 50, sideStreetMiles: 0, hours: 1 }
+    Foo: { highwayMiles: 50, sideStreetMiles: 0, hours: 1, invalidTrips: 0 }
   });
 });
 
 test("handleCommand should discard a Trip with an out-of-range speed", () => {
-  const drivers = { Foo: { highwayMiles: 0, sideStreetMiles: 0, hours: 0 } };
+  const drivers = {
+    Foo: { highwayMiles: 0, sideStreetMiles: 0, hours: 0, invalidTrips: 0 }
+  };
   const line = {
     command: "Trip",
     driver: "Foo",
@@ -96,7 +100,7 @@ test("handleCommand should discard a Trip with an out-of-range speed", () => {
   };
   const actual = handleCommand(drivers, line);
   expect(actual).toEqual({
-    Foo: { highwayMiles: 0, sideStreetMiles: 0, hours: 0 }
+    Foo: { highwayMiles: 0, sideStreetMiles: 0, hours: 0, invalidTrips: 1 }
   });
 });
 
@@ -111,17 +115,20 @@ Trip Alex 12:01 13:16 42.0`;
     Dan: {
       highwayMiles: 21.8,
       sideStreetMiles: 17.3,
-      hours: 0.8333333333333333
+      hours: 0.8333333333333333,
+      invalidTrips: 0
     },
     Alex: {
       highwayMiles: 0,
       sideStreetMiles: 42,
-      hours: 1.25
+      hours: 1.25,
+      invalidTrips: 0
     },
     Bob: {
       highwayMiles: 0,
       sideStreetMiles: 0,
-      hours: 0
+      hours: 0,
+      invalidTrips: 0
     }
   });
 });
@@ -140,17 +147,20 @@ Trip Alex 12:01 13:16 42.0`;
     Dan: {
       highwayMiles: 21.8,
       sideStreetMiles: 17.3,
-      hours: 0.8333333333333333
+      hours: 0.8333333333333333,
+      invalidTrips: 0
     },
     Alex: {
       highwayMiles: 0,
       sideStreetMiles: 42,
-      hours: 1.25
+      hours: 1.25,
+      invalidTrips: 0
     },
     Bob: {
       highwayMiles: 0,
       sideStreetMiles: 0,
-      hours: 0
+      hours: 0,
+      invalidTrips: 0
     }
   });
 });
@@ -161,17 +171,20 @@ test("analyize a simple tally", () => {
       Dan: {
         highwayMiles: 21.8,
         sideStreetMiles: 17.3,
-        hours: 0.8333333333333333
+        hours: 0.8333333333333333,
+        invalidTrips: 0
       },
       Alex: {
         highwayMiles: 0,
         sideStreetMiles: 42,
-        hours: 1.25
+        hours: 1.25,
+        invalidTrips: 0
       },
       Bob: {
         highwayMiles: 0,
         sideStreetMiles: 0,
-        hours: 0
+        hours: 0,
+        invalidTrips: 0
       }
     })
   ).toEqual([
@@ -179,19 +192,22 @@ test("analyize a simple tally", () => {
       driver: "Alex",
       miles: 42,
       mph: 42 / 1.25,
-      percentHighway: 0
+      percentHighway: 0,
+      invalidTrips: 0
     },
     {
       driver: "Dan",
       miles: 39.1,
       mph: 39.1 / 0.8333333333333333,
-      percentHighway: (21.8 / (17.3 + 21.8)) * 100
+      percentHighway: (21.8 / (17.3 + 21.8)) * 100,
+      invalidTrips: 0
     },
     {
       driver: "Bob",
       miles: 0,
       mph: undefined,
-      percentHighway: undefined
+      percentHighway: undefined,
+      invalidTrips: 0
     }
   ]);
 });

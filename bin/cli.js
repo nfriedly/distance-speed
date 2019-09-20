@@ -30,7 +30,7 @@ const analyzeLog = async argv => {
               e.percentHighway
             )}% highway`
           : ""
-      }`
+      }${e.invalidTrips ? ` ${e.invalidTrips} invalid trips` : ""}`
     )
   );
 };
