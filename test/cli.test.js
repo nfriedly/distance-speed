@@ -3,8 +3,8 @@ const path = require("path");
 const cp = require("child_process");
 
 test("it analyzes a logfile", () => {
-  const expected = `Alex: 42 miles @ 34 mph
-Dan: 39 miles @ 47 mph
+  const expected = `Alex: 42 miles @ 34 mph 0% highway
+Dan: 39 miles @ 47 mph 56% highway
 Bob: 0 miles
 `;
   const script = path.join(__dirname, "../bin/cli.js");

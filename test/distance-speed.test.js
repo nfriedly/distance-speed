@@ -61,11 +61,13 @@ test("handleCommand should handle a Driver command", () => {
   const drivers = {};
   const line = { command: "Driver", driver: "Foo" };
   handleCommand(drivers, line);
-  expect(drivers).toEqual({ Foo: { miles: 0, hours: 0 } });
+  expect(drivers).toEqual({
+    Foo: { highwayMiles: 0, sideStreetMiles: 0, hours: 0 }
+  });
 });
 
 test("handleCommand should handle a Trip command", () => {
-  const drivers = { Foo: { miles: 0, hours: 0 } };
+  const drivers = { Foo: { highwayMiles: 0, sideStreetMiles: 0, hours: 0 } };
   const line = {
     command: "Trip",
     driver: "Foo",
@@ -76,11 +78,13 @@ test("handleCommand should handle a Trip command", () => {
     miles: 50
   };
   const actual = handleCommand(drivers, line);
-  expect(actual).toEqual({ Foo: { miles: 50, hours: 1 } });
+  expect(actual).toEqual({
+    Foo: { highwayMiles: 50, sideStreetMiles: 0, hours: 1 }
+  });
 });
 
 test("handleCommand should discard a Trip with an out-of-range speed", () => {
-  const drivers = { Foo: { miles: 0, hours: 0 } };
+  const drivers = { Foo: { highwayMiles: 0, sideStreetMiles: 0, hours: 0 } };
   const line = {
     command: "Trip",
     driver: "Foo",
@@ -91,7 +95,9 @@ test("handleCommand should discard a Trip with an out-of-range speed", () => {
     miles: 999
   };
   const actual = handleCommand(drivers, line);
-  expect(actual).toEqual({ Foo: { miles: 0, hours: 0 } });
+  expect(actual).toEqual({
+    Foo: { highwayMiles: 0, sideStreetMiles: 0, hours: 0 }
+  });
 });
 
 test("tally a simple log file", () => {
@@ -103,15 +109,18 @@ Trip Dan 06:12 06:32 21.8
 Trip Alex 12:01 13:16 42.0`;
   expect(tally(log)).toEqual({
     Dan: {
-      miles: 39.1,
+      highwayMiles: 21.8,
+      sideStreetMiles: 17.3,
       hours: 0.8333333333333333
     },
     Alex: {
-      miles: 42,
+      highwayMiles: 0,
+      sideStreetMiles: 42,
       hours: 1.25
     },
     Bob: {
-      miles: 0,
+      highwayMiles: 0,
+      sideStreetMiles: 0,
       hours: 0
     }
   });
@@ -129,15 +138,18 @@ Trip Alex 12:01 13:16 42.0`;
   const actual = await tallyStream(stream);
   expect(actual).toEqual({
     Dan: {
-      miles: 39.1,
+      highwayMiles: 21.8,
+      sideStreetMiles: 17.3,
       hours: 0.8333333333333333
     },
     Alex: {
-      miles: 42,
+      highwayMiles: 0,
+      sideStreetMiles: 42,
       hours: 1.25
     },
     Bob: {
-      miles: 0,
+      highwayMiles: 0,
+      sideStreetMiles: 0,
       hours: 0
     }
   });
@@ -147,15 +159,18 @@ test("analyize a simple tally", () => {
   expect(
     analyze({
       Dan: {
-        miles: 39.1,
-        hours: 0.8333
+        highwayMiles: 21.8,
+        sideStreetMiles: 17.3,
+        hours: 0.8333333333333333
       },
       Alex: {
-        miles: 42,
-        hours: 1.23
+        highwayMiles: 0,
+        sideStreetMiles: 42,
+        hours: 1.25
       },
       Bob: {
-        miles: 0,
+        highwayMiles: 0,
+        sideStreetMiles: 0,
         hours: 0
       }
     })
@@ -163,17 +178,20 @@ test("analyize a simple tally", () => {
     {
       driver: "Alex",
       miles: 42,
-      mph: 34.146341463414636
+      mph: 42 / 1.25,
+      percentHighway: 0
     },
     {
       driver: "Dan",
       miles: 39.1,
-      mph: 46.921876875075
+      mph: 39.1 / 0.8333333333333333,
+      percentHighway: (21.8 / (17.3 + 21.8)) * 100
     },
     {
       driver: "Bob",
       miles: 0,
-      mph: undefined
+      mph: undefined,
+      percentHighway: undefined
     }
   ]);
 });

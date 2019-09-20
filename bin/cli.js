@@ -25,7 +25,11 @@ const analyzeLog = async argv => {
   analyze(totals).map(e =>
     console.log(
       `${e.driver}: ${Math.round(e.miles)} miles${
-        e.miles ? ` @ ${Math.round(e.mph)} mph` : ""
+        e.miles
+          ? ` @ ${Math.round(e.mph)} mph ${Math.round(
+              e.percentHighway
+            )}% highway`
+          : ""
       }`
     )
   );
